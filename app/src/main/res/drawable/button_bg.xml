@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+
+        <!-- Color de fondo azul -->
+        <solid android:color="#266997"/> <!-- tu color principal -->
+
+        <!-- Bordes redondeados -->
+        <corners android:radius="10dp"/>
+    </shape>
+
+</selector>

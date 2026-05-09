@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity_splash"
+    android:background="@drawable/background1">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="376dp"
+        android:layout_height="188dp"
+        app:srcCompat="@drawable/icono"
+        tools:layout_editor_absoluteX="7dp"
+        tools:layout_editor_absoluteY="288dp" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="348dp"
+        android:layout_height="174dp"
+        app:srcCompat="@drawable/logonombre"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="382dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
