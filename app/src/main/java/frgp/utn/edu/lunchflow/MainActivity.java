@@ -189,22 +189,26 @@ public class MainActivity extends AppCompatActivity {
 
     // Método para calcular el rango de fechas
     private String obtenerRangoSemana() {
+        // Usamos Locale Argentina para que los nombres de los meses sean en español
         Calendar cal = Calendar.getInstance(new Locale("es", "AR"));
 
-        // Lógica para el RF #4: Si ya es viernes después de las 16:00, mostramos la semana que viene
+        // Lógica RF#4: Si hoy es viernes > 16hs, sábado o domingo, mostrar semana siguiente
         int diaActual = cal.get(Calendar.DAY_OF_WEEK);
         int horaActual = cal.get(Calendar.HOUR_OF_DAY);
 
-        if (diaActual > Calendar.FRIDAY || (diaActual == Calendar.FRIDAY && horaActual >= 16)) {
+        if (diaActual == Calendar.SATURDAY || diaActual == Calendar.SUNDAY ||
+                (diaActual == Calendar.FRIDAY && horaActual >= 16)) {
             cal.add(Calendar.WEEK_OF_YEAR, 1);
         }
 
-        // Ajustamos al lunes
+        // FUERZA EL LUNES: Primero llevamos el calendario al inicio de la semana
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+        // Formato para el primer día (solo el número)
         SimpleDateFormat sdfInicio = new SimpleDateFormat("d", new Locale("es", "AR"));
         String inicio = sdfInicio.format(cal.getTime());
 
-        // Ajustamos al viernes
+        // Formato para el viernes (número y mes)
         cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
         SimpleDateFormat sdfFin = new SimpleDateFormat("d 'de' MMMM", new Locale("es", "AR"));
         String fin = sdfFin.format(cal.getTime());
