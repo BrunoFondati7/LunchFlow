@@ -19,11 +19,11 @@ public class AccountActivity extends AppCompatActivity {
 
         Button btnMenu = findViewById(R.id.btnMenu);
 
+        // CORRECCIÓN: Usamos finish() para volver sin perder el progreso
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AccountActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -32,7 +32,10 @@ public class AccountActivity extends AppCompatActivity {
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Para cerrar sesión sí está bien el Intent.
                 Intent intent = new Intent(AccountActivity.this, activity_login.class);
+                // Esto limpia el historial de pantallas para que no puedan volver atrás al perfil
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });

@@ -1,82 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background1">
+    android:background="@drawable/background1"
+    tools:context=".FinishedActivity">
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="250dp"
         android:layout_height="125dp"
+        android:layout_marginTop="21dp"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/nombreentero"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="21dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/nombreentero" />
 
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_alignParentEnd="true"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
         android:background="@null"
         android:contentDescription="Mi cuenta"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/cuenta"
-        tools:layout_editor_absoluteX="332dp"
-        tools:layout_editor_absoluteY="60dp" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginHorizontal="0dp"
-        android:background="@color/white"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="122dp"
-        android:layout_marginTop="122dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cuenta" />
 
     <ImageButton
         android:id="@+id/imageButton2"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
         android:background="@null"
+        android:contentDescription="Atrás"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/atras"
-        tools:layout_editor_absoluteX="15dp"
-        tools:layout_editor_absoluteY="60dp"
-        />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view"
-        android:text="Selección Confirmada"
-        android:textColor="@color/white"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="499dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/atras" />
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="122dp"
         android:background="@color/white"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="710dp"
-        android:layout_marginTop="710dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
         android:layout_width="330dp"
         android:layout_height="60dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
         android:text="Volver al Menu"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
@@ -84,17 +64,42 @@
         android:textStyle="bold"
         app:backgroundTint="#266997"
         app:cornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="740dp" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="500dp"
+        android:layout_width="match_parent"
         android:layout_height="250dp"
-        app:srcCompat="@drawable/icono"
-        tools:layout_editor_absoluteX="-55dp"
-        tools:layout_editor_absoluteY="297" />
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@id/view2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:srcCompat="@drawable/icono" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Selección Confirmada"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

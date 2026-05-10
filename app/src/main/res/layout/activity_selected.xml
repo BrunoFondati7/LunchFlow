@@ -1,82 +1,313 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background1">
+    android:background="@drawable/background1"
+    tools:context=".SelectedActivity">
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="250dp"
         android:layout_height="125dp"
+        android:layout_marginTop="21dp"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/nombreentero"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="21dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/nombreentero" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/ibCuenta"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_alignParentEnd="true"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
         android:background="@null"
         android:contentDescription="Mi cuenta"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/cuenta"
-        tools:layout_editor_absoluteX="332dp"
-        tools:layout_editor_absoluteY="60dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cuenta" />
+
+    <ImageButton
+        android:id="@+id/ibVolver"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:contentDescription="Volver"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/atras" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_marginHorizontal="0dp"
+        android:layout_marginTop="122dp"
         android:background="@color/white"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="122dp"
-        android:layout_marginTop="122dp"/>
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentEnd="true"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/atras"
-        tools:layout_editor_absoluteX="15dp"
-        tools:layout_editor_absoluteY="60dp"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view"
-        android:text="Semana actual:"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="12dp"
+        android:text="Resumen semanal:"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="155dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="330dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/viewer_info_background_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Lunes"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/view3"
+        app:layout_constraintStart_toStartOf="@id/view3"
+        app:layout_constraintTop_toTopOf="@id/view3" />
+
+    <View
+        android:id="@+id/view8"
+        android:layout_width="300dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/viewer_info_background_product"
+        app:layout_constraintBottom_toBottomOf="@id/view3"
+        app:layout_constraintEnd_toEndOf="@id/view3"
+        app:layout_constraintStart_toStartOf="@id/view3" />
+
+    <TextView
+        android:id="@+id/tvResumenLunes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sin elegir"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view8"
+        app:layout_constraintEnd_toEndOf="@id/view8"
+        app:layout_constraintStart_toStartOf="@id/view8"
+        app:layout_constraintTop_toTopOf="@id/view8" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="330dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/viewer_info_background_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view3" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Martes"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/view4"
+        app:layout_constraintStart_toStartOf="@id/view4"
+        app:layout_constraintTop_toTopOf="@id/view4" />
+
+    <View
+        android:id="@+id/view9"
+        android:layout_width="300dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/viewer_info_background_product"
+        app:layout_constraintBottom_toBottomOf="@id/view4"
+        app:layout_constraintEnd_toEndOf="@id/view4"
+        app:layout_constraintStart_toStartOf="@id/view4" />
+
+    <TextView
+        android:id="@+id/tvResumenMartes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sin elegir"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view9"
+        app:layout_constraintEnd_toEndOf="@id/view9"
+        app:layout_constraintStart_toStartOf="@id/view9"
+        app:layout_constraintTop_toTopOf="@id/view9" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="330dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/viewer_info_background_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view4" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Miércoles"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/view5"
+        app:layout_constraintStart_toStartOf="@id/view5"
+        app:layout_constraintTop_toTopOf="@id/view5" />
+
+    <View
+        android:id="@+id/view10"
+        android:layout_width="300dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/viewer_info_background_product"
+        app:layout_constraintBottom_toBottomOf="@id/view5"
+        app:layout_constraintEnd_toEndOf="@id/view5"
+        app:layout_constraintStart_toStartOf="@id/view5" />
+
+    <TextView
+        android:id="@+id/tvResumenMiercoles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sin elegir"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view10"
+        app:layout_constraintEnd_toEndOf="@id/view10"
+        app:layout_constraintStart_toStartOf="@id/view10"
+        app:layout_constraintTop_toTopOf="@id/view10" />
+
+    <View
+        android:id="@+id/view6"
+        android:layout_width="330dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/viewer_info_background_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view5" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Jueves"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/view6"
+        app:layout_constraintStart_toStartOf="@id/view6"
+        app:layout_constraintTop_toTopOf="@id/view6" />
+
+    <View
+        android:id="@+id/view11"
+        android:layout_width="300dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/viewer_info_background_product"
+        app:layout_constraintBottom_toBottomOf="@id/view6"
+        app:layout_constraintEnd_toEndOf="@id/view6"
+        app:layout_constraintStart_toStartOf="@id/view6" />
+
+    <TextView
+        android:id="@+id/tvResumenJueves"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sin elegir"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view11"
+        app:layout_constraintEnd_toEndOf="@id/view11"
+        app:layout_constraintStart_toStartOf="@id/view11"
+        app:layout_constraintTop_toTopOf="@id/view11" />
+
+    <View
+        android:id="@+id/view7"
+        android:layout_width="330dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/viewer_info_background_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view6" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Viernes"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/view7"
+        app:layout_constraintStart_toStartOf="@id/view7"
+        app:layout_constraintTop_toTopOf="@id/view7" />
+
+    <View
+        android:id="@+id/view12"
+        android:layout_width="300dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/viewer_info_background_product"
+        app:layout_constraintBottom_toBottomOf="@id/view7"
+        app:layout_constraintEnd_toEndOf="@id/view7"
+        app:layout_constraintStart_toStartOf="@id/view7" />
+
+    <TextView
+        android:id="@+id/tvResumenViernes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sin elegir"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view12"
+        app:layout_constraintEnd_toEndOf="@id/view12"
+        app:layout_constraintStart_toStartOf="@id/view12"
+        app:layout_constraintTop_toTopOf="@id/view12" />
 
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginBottom="16dp"
         android:background="@color/white"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="710dp"
-        android:layout_marginTop="710dp"/>
+        app:layout_constraintBottom_toTopOf="@id/button2" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
         android:layout_width="330dp"
         android:layout_height="60dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
         android:text="Finalizar"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
@@ -84,145 +315,8 @@
         android:textStyle="bold"
         app:backgroundTint="#266997"
         app:cornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="740dp" />
-
-    <View
-        android:id="@+id/view3"
-        android:layout_width="350dp"
-        android:layout_height="80dp"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="197dp"
-        android:background="@drawable/viewer_info_background" />
-
-    <View
-        android:id="@+id/view4"
-        android:layout_width="350dp"
-        android:layout_height="80dp"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="291dp"
-        android:background="@drawable/viewer_info_background"/>
-
-    <View
-            android:id="@+id/view5"
-            android:layout_width="350dp"
-            android:layout_height="80dp"
-            tools:layout_editor_absoluteX="20dp"
-            tools:layout_editor_absoluteY="385dp"
-        android:background="@drawable/viewer_info_background"/>
-
-    <View
-            android:id="@+id/view6"
-            android:layout_width="350dp"
-            android:layout_height="80dp"
-            tools:layout_editor_absoluteX="20dp"
-            tools:layout_editor_absoluteY="479dp"
-        android:background="@drawable/viewer_info_background"/>
-
-    <View
-            android:id="@+id/view7"
-            android:layout_width="350dp"
-            android:layout_height="80dp"
-            tools:layout_editor_absoluteX="20dp"
-            tools:layout_editor_absoluteY="573dp"
-        android:background="@drawable/viewer_info_background"/>
-
-    <View
-        android:id="@+id/view8"
-        android:layout_width="300dp"
-        android:layout_height="32dp"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="231dp"
-        android:background="@drawable/viewer_info_background_product"/>
-
-    <View
-        android:id="@+id/view9"
-        android:layout_width="300dp"
-        android:layout_height="32dp"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="327dp"
-        android:background="@drawable/viewer_info_background_product"/>
-
-    <View
-        android:id="@+id/view10"
-        android:layout_width="300dp"
-        android:layout_height="32dp"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="421dp"
-        android:background="@drawable/viewer_info_background_product"/>
-
-    <View
-        android:id="@+id/view11"
-        android:layout_width="300dp"
-        android:layout_height="32dp"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="515dp"
-        android:background="@drawable/viewer_info_background_product"/>
-
-    <View
-        android:id="@+id/view12"
-        android:layout_width="300dp"
-        android:layout_height="32dp"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="609dp"
-        android:background="@drawable/viewer_info_background_product"/>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lunes"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        tools:layout_editor_absoluteX="166dp"
-        tools:layout_editor_absoluteY="205dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Martes"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="299dp" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Miercoles"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        tools:layout_editor_absoluteX="150dp"
-        tools:layout_editor_absoluteY="393dp" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Jueves"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="487dp" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Viernes"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        tools:layout_editor_absoluteX="160dp"
-        tools:layout_editor_absoluteY="581dp" />
-
-
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

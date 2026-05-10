@@ -1,12 +1,12 @@
 package frgp.utn.edu.lunchflow;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast; // No olvides el import de Toast
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,15 +16,22 @@ import java.util.List;
 public class PlatoAdapter extends RecyclerView.Adapter<PlatoAdapter.PlatoViewHolder> {
 
     private final List<Plato> listaPlatos;
+    private final OnPlatoSeleccionadoListener listener; // El puente
 
-    public PlatoAdapter(List<Plato> listaPlatos) {
+    // 1. Definimos la interfaz (el contrato)
+    public interface OnPlatoSeleccionadoListener {
+        void onPlatoSeleccionado(Plato plato);
+    }
+
+    // 2. Actualizamos el constructor para recibir el listener
+    public PlatoAdapter(List<Plato> listaPlatos, OnPlatoSeleccionadoListener listener) {
         this.listaPlatos = listaPlatos;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public PlatoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // IMPORTANTE: Debe ser R.layout.item_plato, NO R.id.item_plato
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_plato, parent, false);
         return new PlatoViewHolder(view);
     }
@@ -36,11 +43,13 @@ public class PlatoAdapter extends RecyclerView.Adapter<PlatoAdapter.PlatoViewHol
         holder.tvDescripcion.setText(plato.getDescripcion());
         holder.ivPlato.setImageResource(plato.getImagenResId());
 
-        // Esto evita que el botón tire error al hacerle clic
+        // 3. Cuando se hace clic, le avisamos a la MainActivity
+
         holder.btnSeleccionar.setOnClickListener(v -> {
-            // Por ahora solo mostramos un mensaje
-            android.widget.Toast.makeText(v.getContext(),
-                    "Seleccionaste: " + plato.getTitulo(), android.widget.Toast.LENGTH_SHORT).show();
+            if (listener != null) {
+                // Solo le avisamos al listener (MainActivity) que se tocó el botón
+                listener.onPlatoSeleccionado(plato);
+            }
         });
     }
 
@@ -52,15 +61,13 @@ public class PlatoAdapter extends RecyclerView.Adapter<PlatoAdapter.PlatoViewHol
     static class PlatoViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitulo, tvDescripcion;
         ImageView ivPlato;
-        Button btnSeleccionar; // 1. Agregamos la declaración del botón
+        Button btnSeleccionar;
 
         public PlatoViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitulo = itemView.findViewById(R.id.tvTituloPlato);
             tvDescripcion = itemView.findViewById(R.id.tvDescripcionPlato);
             ivPlato = itemView.findViewById(R.id.ivPlato);
-
-            // 2. Lo vinculamos con el ID que pusimos en el XML
             btnSeleccionar = itemView.findViewById(R.id.btnSeleccionar);
         }
     }

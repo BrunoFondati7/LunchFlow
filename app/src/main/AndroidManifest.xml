@@ -21,6 +21,10 @@
         <activity
             android:name=".activity_splash"
             android:exported="false" /> <!-- Activity Principal: será la primera en abrir -->
+        <activity android:name=".SelectedActivity"
+            android:exported="false" />
+        <activity android:name=".FinishedActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
