@@ -77,6 +77,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/viewer_info_background_options"
+        android:fontFamily="@font/montserrat_bold"
         android:text="Historial de Pedidos"
         android:textAllCaps="false"
         android:textColor="@color/white"
