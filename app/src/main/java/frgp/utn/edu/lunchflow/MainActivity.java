@@ -10,14 +10,19 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -174,8 +179,31 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //Declaracion para el metodo de rango semanal.
+        TextView tvSemanaActual = findViewById(R.id.textView);
+        tvSemanaActual.setText(obtenerRangoSemana());
     }
 
+
+
+    // Método para calcular el rango de fechas
+    private String obtenerRangoSemana() {
+        Calendar cal = Calendar.getInstance();
+
+        // Ajustamos al lunes de la semana actual
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        SimpleDateFormat sdf = new SimpleDateFormat("d", new Locale("es", "AR"));
+        String inicio = sdf.format(cal.getTime());
+
+        // Ajustamos al viernes
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+        // Para el final queremos día y mes (ej: "15 de mayo")
+        SimpleDateFormat sdfFinal = new SimpleDateFormat("d 'de' MMMM", new Locale("es", "AR"));
+        String fin = sdfFinal.format(cal.getTime());
+
+        return "Semana actual: " + inicio + " al " + fin;
+    }
 
     private void actualizarEstiloBotonesDias() {
         // Recorremos todos los botones que tenemos guardados en el Map
