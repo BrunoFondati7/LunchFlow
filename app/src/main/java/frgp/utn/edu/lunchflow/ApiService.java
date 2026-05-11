@@ -11,10 +11,15 @@ import retrofit2.http.POST;
 
 public interface ApiService {
 
+    @POST("api/usuarios/login")
+    Call<Usuario> login(@Body LoginRequest loginRequest);
+
     // Este metodo le dice a Retrofit: "Hacé un GET a /api/platos"
     @GET("api/platos")
     Call<List<Plato>> obtenerPlatos();
 
     @POST("api/selecciones/confirmar")
     Call<ResponseBody> confirmarSeleccion(@Body SeleccionRequest request);
+
+
 }

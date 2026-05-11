@@ -10,17 +10,16 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="376dp"
-        android:layout_height="188dp"
-        app:srcCompat="@drawable/icono"
-        tools:layout_editor_absoluteX="7dp"
-        tools:layout_editor_absoluteY="288dp" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        app:srcCompat="@drawable/splash"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="348dp"
-        android:layout_height="174dp"
-        app:srcCompat="@drawable/logonombre"
-        tools:layout_editor_absoluteX="21dp"
-        tools:layout_editor_absoluteY="382dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

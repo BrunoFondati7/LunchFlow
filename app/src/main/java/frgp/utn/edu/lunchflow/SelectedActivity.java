@@ -1,6 +1,7 @@
 package frgp.utn.edu.lunchflow;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import frgp.utn.edu.lunchflow.R;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -30,30 +30,37 @@ public class SelectedActivity extends AppCompatActivity {
         // Inicializamos el servicio de Retrofit
         apiService = RetrofitClient.getApiService();
 
-        // Vinculamos vistas
+        // Vinculamos vistas del XML
         TextView tvLunes = findViewById(R.id.tvResumenLunes);
         TextView tvMartes = findViewById(R.id.tvResumenMartes);
         TextView tvMiercoles = findViewById(R.id.tvResumenMiercoles);
         TextView tvJueves = findViewById(R.id.tvResumenJueves);
         TextView tvViernes = findViewById(R.id.tvResumenViernes);
 
-        // 3. RECIBIR LOS DATOS (Necesitamos IDs para el servidor y Nombres para la vista)
+        // 3. RECUPERAR EL LEGAJO REAL DESDE EL LOGIN
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String legajoReal = prefs.getString("legajoReal", "INVITADO");
+
+        // 4. RECIBIR LOS DATOS DEL MENÚ (IDs y Nombres)
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            // 1. ASIGNAR A LOS TEXTVIEWS (Fijate que los nombres coincidan con el putExtra de arriba)
-            tvLunes.setText(extras.getString("NombreLunes", "No llegó"));
-            tvMartes.setText(extras.getString("NombreMartes", "No llegó"));
-            tvMiercoles.setText(extras.getString("NombreMiercoles", "No llegó"));
-            tvJueves.setText(extras.getString("NombreJueves", "No llegó"));
-            tvViernes.setText(extras.getString("NombreViernes", "No llegó"));
+            // ASIGNAR A LOS TEXTVIEWS (Para que el usuario vea qué eligió)
+            tvLunes.setText(extras.getString("NombreLunes", "Sin plato"));
+            tvMartes.setText(extras.getString("NombreMartes", "Sin plato"));
+            tvMiercoles.setText(extras.getString("NombreMiercoles", "Sin plato"));
+            tvJueves.setText(extras.getString("NombreJueves", "Sin plato"));
+            tvViernes.setText(extras.getString("NombreViernes", "Sin plato"));
 
-            // 2. CARGAR EL REQUEST PARA EL SERVIDOR
+            // CARGAR EL REQUEST PARA EL SERVIDOR
             requestParaEnviar = new SeleccionRequest();
-            requestParaEnviar.legajoUser = "BRUNO_TEST";
-            requestParaEnviar.idMenu = 1;
+
+            // ¡CHAU HARDCODEO! Usamos el legajo recuperado de SharedPreferences
+            requestParaEnviar.legajoUser = legajoReal;
+
+            requestParaEnviar.idMenu = 1; // Asumimos menú 1 o el que maneje tu lógica
             requestParaEnviar.detalles = new ArrayList<>();
 
-            // Cargamos los IDs usando las mismas claves
+            // Cargamos los IDs de los platos seleccionados vinculados a cada día (1=Lunes, 2=Martes...)
             requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdLunes", 0), 1));
             requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdMartes", 0), 2));
             requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdMiercoles", 0), 3));
@@ -61,35 +68,43 @@ public class SelectedActivity extends AppCompatActivity {
             requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdViernes", 0), 5));
         }
 
-        // 4. BOTÓN FINALIZAR (El que envía los datos)
+        // 5. BOTÓN FINALIZAR (Envía los datos al Backend)
         Button btnFinalizar = findViewById(R.id.button2);
         btnFinalizar.setOnClickListener(v -> {
-            enviarPedidoAlServidor();
+            if (requestParaEnviar != null) {
+                enviarPedidoAlServidor();
+            } else {
+                Toast.makeText(this, "Error: No hay datos para enviar", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        // Botones de navegación
+        // Botón de navegación atrás
         ImageButton ibVolver = findViewById(R.id.ibVolver);
         ibVolver.setOnClickListener(v -> finish());
     }
 
     private void enviarPedidoAlServidor() {
+        Log.d("LUNCHFLOW", "Enviando pedido para el legajo: " + requestParaEnviar.legajoUser);
+
         // Ejecutamos la llamada que definimos en la interfaz ApiService
         apiService.confirmarSeleccion(requestParaEnviar).enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    // SITODO SALIO BIEN: Vamos a la pantalla final
-                    Toast.makeText(SelectedActivity.this, "¡Pedido guardado!", Toast.LENGTH_SHORT).show();
+                    // SI TODO SALIÓ BIEN: Vamos a la pantalla de confirmación final
+                    Toast.makeText(SelectedActivity.this, "¡Pedido guardado con éxito!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SelectedActivity.this, FinishedActivity.class);
                     startActivity(intent);
-                    finish();
+                    finish(); // Cerramos esta pantalla para que no pueda volver a editar
                 } else {
-                    Toast.makeText(SelectedActivity.this, "Error en el servidor: " + response.code(), Toast.LENGTH_LONG).show();
+                    Log.e("LUNCHFLOW_ERR", "Error en el servidor: " + response.code());
+                    Toast.makeText(SelectedActivity.this, "Error en el servidor. Código: " + response.code(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("LUNCHFLOW_FAIL", "Fallo de conexión: " + t.getMessage());
                 Toast.makeText(SelectedActivity.this, "Sin conexión con el servidor de la UTN", Toast.LENGTH_LONG).show();
             }
         });
