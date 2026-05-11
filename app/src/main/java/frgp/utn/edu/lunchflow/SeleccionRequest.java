@@ -2,7 +2,7 @@ package frgp.utn.edu.lunchflow;
 
 import java.util.List;
 
-class SeleccionRequest {
+public class SeleccionRequest {
     public String legajoUser;
     public Integer idMenu;
     public List<DetalleDTO> detalles;
@@ -15,7 +15,7 @@ class SeleccionRequest {
         public DetalleDTO(Integer idPlato, Integer diaSemana) {
             this.idPlato = idPlato;
             this.diaSemana = diaSemana;
-            this.cantidad = 1; // Según el DER es siempre 1
+            this.cantidad = 1;
         }
     }
 }

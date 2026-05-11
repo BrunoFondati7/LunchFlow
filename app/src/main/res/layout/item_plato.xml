@@ -1,67 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"> <androidx.cardview.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    app:cardBackgroundColor="@android:color/transparent"
-    app:cardCornerRadius="32dp"
-    app:cardElevation="0dp"
-    app:cardPreventCornerOverlap="false">
+    android:padding="20dp">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/viewer_info_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="0dp"
+        app:cardPreventCornerOverlap="false">
 
-        <TextView
-            android:id="@+id/tvTituloPlato"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Milanesa con Puré"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textAlignment="center" />
-
-        <ImageView
-            android:id="@+id/ivPlato"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/plato1" />
+            android:layout_height="wrap_content" android:background="@drawable/viewer_info_background"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvDescripcionPlato"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="Clásica milanesa de carne con puré de papa."
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tvTituloPlato"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                tools:text="Milanesa con Puré" />
 
-        <Button
-            android:id="@+id/btnSeleccionar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:backgroundTint="#6395BD"
-            android:text="Seleccionar"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:cornerRadius="16dp" />
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/ivPlato"
+                android:layout_width="match_parent"
+                android:layout_height="220dp" android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@drawable/plato1" />
+
+            <TextView
+                android:id="@+id/tvDescripcionPlato"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"
+                tools:text="Clásica milanesa de carne con puré de papa cremoso y suave." />
+
+            <Button
+                android:id="@+id/btnSeleccionar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:backgroundTint="#6395BD"
+                android:text="Seleccionar este plato"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="16dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </FrameLayout>

@@ -25,72 +25,89 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import android.util.Log;
+import frgp.utn.edu.lunchflow.ApiService;
+import frgp.utn.edu.lunchflow.SeleccionRequest;
+
 public class MainActivity extends AppCompatActivity {
 
+    // --- VISTAS ---
     private ViewPager2 viewPager;
-    private PlatoAdapter adapter;
     private LinearLayout layoutIndicadores;
-
-    private String diaSeleccionado = null;
-    private HashMap<String, Integer> eleccionesSemanales = new HashMap<>(); // Guarda "Lunes" -> ID_Plato
-
-    // Variable para el día que el usuario tocó (L, M, M, J, V)
-    private String diaActualSeleccionado = null;
-
-    // Lista de botones para poder cambiarlos de color fácilmente
-    private Map<String, Button> botonesDias = new HashMap<>();
-
     private Button btnLun, btnMar, btnMie, btnJue, btnVie;
+
+    // --- DATOS Y API ---
+    private ApiService apiService;
+    private List<Plato> listaPlatos; // Variable global para los datos del Backend
+    private PlatoAdapter adapter;
+
+    // --- LÓGICA DE SELECCIÓN ---
+    private String diaSeleccionado = null; // El día que el usuario tiene "marcado" actualmente
+    private HashMap<String, Plato> eleccionesSemanales = new HashMap<>();
+    private Map<String, Button> botonesDias = new HashMap<>(); // Para manejar los colores fácilmente
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 1. Enlazamos vistas (ViewPager e Indicadores)
         viewPager = findViewById(R.id.viewPagerPlatos);
         layoutIndicadores = findViewById(R.id.layoutIndicadores);
+        ImageButton botonCuenta = findViewById(R.id.botonCuenta);
+        Button btnConfirmarSemana = findViewById(R.id.button2);
+        TextView tvSemanaActual = findViewById(R.id.textView);
 
-        // 1. Creamos la lista con los 5 platos
-        List<Plato> listaPlatos = new ArrayList<>();
-        listaPlatos.add(new Plato("Milanesa con Puré", "Clásica milanesa de carne con puré de papa.", R.drawable.plato1));
-        listaPlatos.add(new Plato("Cerdo c/ Pure de Calabaza", "Carre de cerdo con puré de calabaza, combinación de sabores intensos y delicados.", R.drawable.plato2));
-        listaPlatos.add(new Plato("Ensalada Caesar", "Pollo grillado, lechuga, croutons y aderezo.", R.drawable.plato3));
-        listaPlatos.add(new Plato("Tarta de Verduras", "Delicada tarta de masa dorada, rellena con una selección de verduras frescas que aportan color, sabor y textura en cada bocado.", R.drawable.plato4));
-        listaPlatos.add(new Plato("Arroz con Pollo", "Arroz cremoso y aromático, cocinado con tiernos trozos de pollo y un toque de especias que realzan su sabor tradicional.", R.drawable.plato5));
+        // 2. Inicializamos los botones de los días y el mapa
+        btnLun = findViewById(R.id.btnLun);
+        btnMar = findViewById(R.id.btnMar);
+        btnMie = findViewById(R.id.btnMie);
+        btnJue = findViewById(R.id.btnJue);
+        btnVie = findViewById(R.id.btnVie);
 
-// 2. Configuramos el adaptador con el Listener (el puente)
+        botonesDias.put("Lunes", btnLun);
+        botonesDias.put("Martes", btnMar);
+        botonesDias.put("Miercoles", btnMie);
+        botonesDias.put("Jueves", btnJue);
+        botonesDias.put("Viernes", btnVie);
+
+        // 2.5 Asignamos los clics a los botones de los días
+        for (Map.Entry<String, Button> entry : botonesDias.entrySet()) {
+            String dia = entry.getKey();
+            Button boton = entry.getValue();
+
+            boton.setOnClickListener(v -> {
+                diaSeleccionado = dia; // Ahora sí, el día deja de ser null
+                actualizarEstiloBotonesDias(); // Para que se pinte el seleccionado
+                Toast.makeText(this, "Día seleccionado: " + dia, Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        // 3. Inicializamos datos y adaptador
+        listaPlatos = new ArrayList<>();
         adapter = new PlatoAdapter(listaPlatos, plato -> {
-            // ESTA LÓGICA SE DISPARA CUANDO TOCÁS "SELECCIONAR ESTE PLATO"
             if (diaSeleccionado == null) {
-                // Si no eligió día, le avisamos
-                Toast.makeText(MainActivity.this, "Por favor, elegí un día primero", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Elegí un día", Toast.LENGTH_SHORT).show();
             } else {
-                // 1. Guardamos la elección en el mapa (Día -> ID del plato)
-                // Usamos el ID o el nombre para que el sistema sepa que este día ya está "listo"
-                eleccionesSemanales.put(diaSeleccionado, 1);
+                // Guardamos el objeto Plato completo, no solo el nombre
+                eleccionesSemanales.put(diaSeleccionado, plato);
 
-                // 2. Refrescamos TODOS los botones.
-                // Como ya guardamos el dato en el mapa, este método pintará este día de VERDE
-                // y mantendrá los otros confirmados también en VERDE.
-                // Guardar la eleccion del PLATO.
-                guardarEleccionLocal(diaSeleccionado, plato.getTitulo());
                 actualizarEstiloBotonesDias();
-
-                Toast.makeText(MainActivity.this, "Confirmado: " + plato.getTitulo() + " para el " + diaSeleccionado, Toast.LENGTH_SHORT).show();
-
-                // 3. Reseteamos diaSeleccionado.
-                // Esto es importante para que el usuario tenga que elegir OTRO día
-                // antes de confirmar el siguiente plato.
-                diaSeleccionado = null;
+                Toast.makeText(this, "Elegiste: " + plato.getTitulo(), Toast.LENGTH_SHORT).show();
             }
         });
 
-
+        // 4. Configuración visual del ViewPager2
         viewPager.setAdapter(adapter);
-
-        // 3. Configuramos los indicadores (puntitos)
-        configurarIndicadores(listaPlatos.size());
-        marcarIndicadorSeleccionado(0); // El primero empieza seleccionado
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setPageTransformer((page, position) -> {
+            float r = 1 - Math.abs(position);
+            page.setScaleY(0.85f + r * 0.15f);
+        });
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -100,94 +117,82 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.setPageTransformer((page, position) -> {
-            float r = 1 - Math.abs(position);
-            page.setScaleY(0.85f + r * 0.15f); // Las cartas de los lados se achican un 15%
-        });
+        // 5. Listeners de los botones de días
+        btnLun.setOnClickListener(v -> { diaSeleccionado = "Lunes"; actualizarEstiloBotonesDias(); });
+        btnMar.setOnClickListener(v -> { diaSeleccionado = "Martes"; actualizarEstiloBotonesDias(); });
+        btnMie.setOnClickListener(v -> { diaSeleccionado = "Miercoles"; actualizarEstiloBotonesDias(); });
+        btnJue.setOnClickListener(v -> { diaSeleccionado = "Jueves"; actualizarEstiloBotonesDias(); });
+        btnVie.setOnClickListener(v -> { diaSeleccionado = "Viernes"; actualizarEstiloBotonesDias(); });
 
-
-        // En el onCreate, inicializalos:
-        botonesDias.put("Lunes", findViewById(R.id.btnLun));
-        botonesDias.put("Martes", findViewById(R.id.btnMar));
-        botonesDias.put("Miercoles", findViewById(R.id.btnMie));
-        botonesDias.put("Jueves", findViewById(R.id.btnJue));
-        botonesDias.put("Viernes", findViewById(R.id.btnVie));
-
-        // Inicializamos los botones
-        btnLun = findViewById(R.id.btnLun);
-        btnMar = findViewById(R.id.btnMar);
-        btnMie = findViewById(R.id.btnMie);
-        btnJue = findViewById(R.id.btnJue);
-        btnVie = findViewById(R.id.btnVie);
-
-        btnLun.setOnClickListener(v -> {
-            diaSeleccionado = "Lunes";
-            actualizarEstiloBotonesDias();
-        });
-
-        btnMar.setOnClickListener(v -> {
-            diaSeleccionado = "Martes";
-            actualizarEstiloBotonesDias();
-        });
-
-        btnMie.setOnClickListener(v -> {
-            diaSeleccionado = "Miercoles";
-            actualizarEstiloBotonesDias();
-        });
-
-        btnJue.setOnClickListener(v -> {
-            diaSeleccionado = "Jueves";
-            actualizarEstiloBotonesDias();
-        });
-
-        btnVie.setOnClickListener(v -> {
-            diaSeleccionado = "Viernes";
-            actualizarEstiloBotonesDias();
-        });
-        ImageButton botonCuenta = findViewById(R.id.botonCuenta);
-
-        botonCuenta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button btnConfirmarSemana = findViewById(R.id.button2);
+        // 6. Botón Cuenta y Confirmar Semana
+        botonCuenta.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AccountActivity.class)));
 
         btnConfirmarSemana.setOnClickListener(v -> {
-            // Verificamos si el usuario ya eligió los 5 días (Lunes a Viernes)
             if (eleccionesSemanales.size() < 5) {
-                // Si faltan días, mostramos un aviso y NO pasamos de pantalla
-                Toast.makeText(MainActivity.this,
-                        "Faltan seleccionar " + (5 - eleccionesSemanales.size()) + " día(s)",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Faltan días", Toast.LENGTH_SHORT).show();
             } else {
-                // Si el tamaño es 5, significa que completó la semana
-                Intent intent = new Intent(MainActivity.this, SelectedActivity.class);
+                Intent intent = new Intent(this, SelectedActivity.class);
 
-                // Recuperamos los nombres de los platos de SharedPreferences para pasarlos
-                SharedPreferences prefs = getSharedPreferences("SeleccionSemanal", MODE_PRIVATE);
-                intent.putExtra("Lunes", prefs.getString("Lunes", "Sin elegir"));
-                intent.putExtra("Martes", prefs.getString("Martes", "Sin elegir"));
-                intent.putExtra("Miercoles", prefs.getString("Miercoles", "Sin elegir"));
-                intent.putExtra("Jueves", prefs.getString("Jueves", "Sin elegir"));
-                intent.putExtra("Viernes", prefs.getString("Viernes", "Sin elegir"));
+                // Pasamos los datos uno por uno para asegurar que lleguen
+                intent.putExtra("NombreLunes", eleccionesSemanales.get("Lunes").getTitulo());
+                intent.putExtra("IdLunes", eleccionesSemanales.get("Lunes").getId());
+
+                intent.putExtra("NombreMartes", eleccionesSemanales.get("Martes").getTitulo());
+                intent.putExtra("IdMartes", eleccionesSemanales.get("Martes").getId());
+
+                intent.putExtra("NombreMiercoles", eleccionesSemanales.get("Miercoles").getTitulo());
+                intent.putExtra("IdMiercoles", eleccionesSemanales.get("Miercoles").getId());
+
+                intent.putExtra("NombreJueves", eleccionesSemanales.get("Jueves").getTitulo());
+                intent.putExtra("IdJueves", eleccionesSemanales.get("Jueves").getId());
+
+                intent.putExtra("NombreViernes", eleccionesSemanales.get("Viernes").getTitulo());
+                intent.putExtra("IdViernes", eleccionesSemanales.get("Viernes").getId());
 
                 startActivity(intent);
             }
         });
-
-        //Declaracion para el metodo de rango semanal.
-        TextView tvSemanaActual = findViewById(R.id.textView);
+        // 7. Texto de la semana y carga de API
         tvSemanaActual.setText(obtenerRangoSemana());
+
+        // Usamos el metodo que creaste en tu RetrofitClient
+        apiService = RetrofitClient.getApiService();
+
+        cargarPlatosDesdeApi();
+
+
     }
 
 
+    private void cargarPlatosDesdeApi() {
+        apiService.obtenerPlatos().enqueue(new Callback<List<Plato>>() {
+            @Override
+            public void onResponse(Call<List<Plato>> call, Response<List<Plato>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // 1. Limpiamos y llenamos la lista con datos de Postgres
+                    listaPlatos.clear();
+                    listaPlatos.addAll(response.body());
 
-    // Método para calcular el rango de fechas
+                    // 2. Avisamos al adaptador que hay platos nuevos
+                    adapter.notifyDataSetChanged();
+
+                    // 3. ¡IMPORTANTE! Ahora que sabemos cuántos platos hay,
+                    // creamos los puntitos (indicadores)
+                    configurarIndicadores(listaPlatos.size());
+                    marcarIndicadorSeleccionado(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Plato>> call, Throwable t) {
+                // Si el servidor está apagado o no hay internet, entra acá
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+                Toast.makeText(MainActivity.this, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Metodo para calcular el rango de fechas
     private String obtenerRangoSemana() {
         // Usamos Locale Argentina para que los nombres de los meses sean en español
         Calendar cal = Calendar.getInstance(new Locale("es", "AR"));
@@ -274,6 +279,67 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(dia, plato); // Guarda por ejemplo: "Lunes" -> "Milanesa con Puré"
         editor.apply();
+    }
+
+    private void enviarSeleccionAlServidor() {
+        // 0. MAPA DE DÍAS (Asegurate que esté dentro del método)
+        Map<String, Integer> diasMap = new HashMap<>();
+        diasMap.put("Lunes", 1);
+        diasMap.put("Martes", 2);
+        diasMap.put("Miercoles", 3);
+        diasMap.put("Jueves", 4);
+        diasMap.put("Viernes", 5);
+
+        // 1. OBJETO REQUEST
+        SeleccionRequest request = new SeleccionRequest();
+        request.legajoUser = "12345";
+        request.idMenu = 1;
+        request.detalles = new ArrayList<>();
+
+        // 2. CARGA DE DETALLES
+        for (String nombreDia : eleccionesSemanales.keySet()) {
+            Plato platoElegido = eleccionesSemanales.get(nombreDia);
+            Integer nroDia = diasMap.get(nombreDia);
+
+            if (platoElegido != null && nroDia != null) {
+                SeleccionRequest.DetalleDTO nuevoDetalle = new SeleccionRequest.DetalleDTO(
+                        platoElegido.getId(),
+                        nroDia
+                );
+                request.detalles.add(nuevoDetalle);
+            }
+        }
+
+        // 3. LLAMADA A RETROFIT
+        apiService.confirmarSeleccion(request).enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // ¡ÉXITO!
+                    Toast.makeText(MainActivity.this, "Selección confirmada correctamente", Toast.LENGTH_SHORT).show();
+
+                    // RECIÉN ACÁ HACEMOS EL SALTO
+                    Intent intent = new Intent(MainActivity.this, SelectedActivity.class);
+
+                    // Pasamos los datos para el próximo layout
+                    for (Map.Entry<String, Plato> entry : eleccionesSemanales.entrySet()) {
+                        intent.putExtra(entry.getKey(), entry.getValue().getTitulo());
+                    }
+
+                    startActivity(intent);
+                    finish(); // Opcional: para que no pueda volver atrás a editar
+                } else {
+                    // El servidor respondió, pero hubo un error (ej: error 500)
+                    Toast.makeText(MainActivity.this, "Error: No se pudo confirmar la selección en el servidor", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Ni siquiera se pudo llegar al servidor (ej: PC apagada o sin WiFi)
+                Toast.makeText(MainActivity.this, "Fallo de conexión: Revisá que el servidor esté corriendo", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }

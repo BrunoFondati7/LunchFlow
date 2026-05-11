@@ -2,63 +2,96 @@ package frgp.utn.edu.lunchflow;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 import frgp.utn.edu.lunchflow.R;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class SelectedActivity extends AppCompatActivity {
+
+    private ApiService apiService; // 1. Declaramos el servicio
+    private SeleccionRequest requestParaEnviar; // 2. Guardaremos los datos aquí
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected);
 
-        // 1. Vinculamos los TextViews (asegurante que los IDs coincidan con tu XML)
+        // Inicializamos el servicio de Retrofit
+        apiService = RetrofitClient.getApiService();
+
+        // Vinculamos vistas
         TextView tvLunes = findViewById(R.id.tvResumenLunes);
         TextView tvMartes = findViewById(R.id.tvResumenMartes);
         TextView tvMiercoles = findViewById(R.id.tvResumenMiercoles);
         TextView tvJueves = findViewById(R.id.tvResumenJueves);
         TextView tvViernes = findViewById(R.id.tvResumenViernes);
 
-        // 2. Recibimos los datos del Intent
+        // 3. RECIBIR LOS DATOS (Necesitamos IDs para el servidor y Nombres para la vista)
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            tvLunes.setText(extras.getString("Lunes"));
-            tvMartes.setText(extras.getString("Martes"));
-            tvMiercoles.setText(extras.getString("Miercoles"));
-            tvJueves.setText(extras.getString("Jueves"));
-            tvViernes.setText(extras.getString("Viernes"));
+            // 1. ASIGNAR A LOS TEXTVIEWS (Fijate que los nombres coincidan con el putExtra de arriba)
+            tvLunes.setText(extras.getString("NombreLunes", "No llegó"));
+            tvMartes.setText(extras.getString("NombreMartes", "No llegó"));
+            tvMiercoles.setText(extras.getString("NombreMiercoles", "No llegó"));
+            tvJueves.setText(extras.getString("NombreJueves", "No llegó"));
+            tvViernes.setText(extras.getString("NombreViernes", "No llegó"));
+
+            // 2. CARGAR EL REQUEST PARA EL SERVIDOR
+            requestParaEnviar = new SeleccionRequest();
+            requestParaEnviar.legajoUser = "BRUNO_TEST";
+            requestParaEnviar.idMenu = 1;
+            requestParaEnviar.detalles = new ArrayList<>();
+
+            // Cargamos los IDs usando las mismas claves
+            requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdLunes", 0), 1));
+            requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdMartes", 0), 2));
+            requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdMiercoles", 0), 3));
+            requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdJueves", 0), 4));
+            requestParaEnviar.detalles.add(new SeleccionRequest.DetalleDTO(extras.getInt("IdViernes", 0), 5));
         }
-        // 1. Vinculamos los botones por su ID
-        ImageButton ibVolver = findViewById(R.id.ibVolver); // El ID de tu XML era imageButton2
-        ImageButton ibCuenta = findViewById(R.id.ibCuenta);  // El ID de tu XML era imageButton
 
-        // 2. Funcionalidad para VOLVER
-        ibVolver.setOnClickListener(v -> {
-            // Al usar finish() volvemos a la pantalla anterior (MainActivity)
-            // sin crear una nueva instancia, ahorrando memoria.
-            finish();
-        });
-        // 3. Funcionalidad para ir a CUENTA
-        ibCuenta.setOnClickListener(v -> {
-            Intent intent = new Intent(SelectedActivity.this, AccountActivity.class);
-            startActivity(intent);
-        });
-        // 1. Vinculamos el botón por su ID
+        // 4. BOTÓN FINALIZAR (El que envía los datos)
         Button btnFinalizar = findViewById(R.id.button2);
-
-        // 2. Le damos la funcionalidad para saltar a la última pantalla
         btnFinalizar.setOnClickListener(v -> {
-            Intent intent = new Intent(SelectedActivity.this, FinishedActivity.class);
-            startActivity(intent);
+            enviarPedidoAlServidor();
+        });
 
-            // Opcional: Podés usar finish() si no querés que el usuario
-            // pueda volver atrás al resumen una vez que ya terminó.
-            finish();
+        // Botones de navegación
+        ImageButton ibVolver = findViewById(R.id.ibVolver);
+        ibVolver.setOnClickListener(v -> finish());
+    }
+
+    private void enviarPedidoAlServidor() {
+        // Ejecutamos la llamada que definimos en la interfaz ApiService
+        apiService.confirmarSeleccion(requestParaEnviar).enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // SITODO SALIO BIEN: Vamos a la pantalla final
+                    Toast.makeText(SelectedActivity.this, "¡Pedido guardado!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SelectedActivity.this, FinishedActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(SelectedActivity.this, "Error en el servidor: " + response.code(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(SelectedActivity.this, "Sin conexión con el servidor de la UTN", Toast.LENGTH_LONG).show();
+            }
         });
     }
 }

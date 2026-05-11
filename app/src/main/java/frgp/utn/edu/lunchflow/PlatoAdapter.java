@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+
 import android.widget.Toast; // No olvides el import de Toast
 
 import androidx.annotation.NonNull;
@@ -41,7 +44,15 @@ public class PlatoAdapter extends RecyclerView.Adapter<PlatoAdapter.PlatoViewHol
         Plato plato = listaPlatos.get(position);
         holder.tvTitulo.setText(plato.getTitulo());
         holder.tvDescripcion.setText(plato.getDescripcion());
-        holder.ivPlato.setImageResource(plato.getImagenResId());
+
+        // USAMOS GLIDE: Transforma la URL (String) en una imagen real
+        Glide.with(holder.itemView.getContext())
+                .load(plato.getUrlImagen()) // El campo String que creamos
+                .placeholder(android.R.drawable.progress_horizontal) // Icono de carga del sistema
+                .error(android.R.drawable.stat_notify_error)         // Icono de error del sistema
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(holder.ivPlato);
+
 
         // 3. Cuando se hace clic, le avisamos a la MainActivity
 
