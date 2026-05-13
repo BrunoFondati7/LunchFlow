@@ -26,6 +26,11 @@ public class AccountActivity extends AppCompatActivity {
         // 3. Lo mostramos en pantalla (reemplaza el "nameUser" del XML)
         tvUser.setText(nombreUsuario);
 
+        Button btnHistorial = findViewById(R.id.button3);
+        btnHistorial.setOnClickListener(v -> {
+            startActivity(new Intent(AccountActivity.this, HistoryActivity.class));
+        });
+
         // 4. Botón Volver al Menú
         Button btnMenu = findViewById(R.id.btnMenu);
         btnMenu.setOnClickListener(new View.OnClickListener() {

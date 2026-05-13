@@ -47,9 +47,11 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.1.0"
 
     // Para conectar con Spring Boot
-    implementation 'com.squareup.retrofit2:retrofit:3.0.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Para cargar las fotos desde la URL
     implementation 'com.github.bumptech.glide:glide:4.15.1'
+
+
 }

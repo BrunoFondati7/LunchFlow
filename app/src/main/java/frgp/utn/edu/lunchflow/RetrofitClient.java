@@ -7,7 +7,7 @@ public class RetrofitClient {
     private static Retrofit retrofit = null;
 
     // IP especial para que el emulador vea la PC (localhost)
-    private static final String BASE_URL = "http://10.0.2.2:8080/";
+    private static final String BASE_URL = "http://192.168.0.88:8080/";
 
     public static ApiService getApiService() {
         if (retrofit == null) {
